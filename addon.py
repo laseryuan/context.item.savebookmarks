@@ -19,14 +19,28 @@ def save_file_to_folder(path, data):
     result = f.write(str(data))
     f.close()
 
+def get_file_name():
+    itemPath = sys.listitem.getPath()
+    filePath = translateItemPath(itemPath)
+    return os.path.basename(filePath)
+
+def get_current_dir():
+    itemPath = sys.listitem.getPath()
+    filePath = translateItemPath(itemPath)
+    dirPath = os.path.dirname(filePath) + os.sep
+
+    if dirPath == "":
+        dialog = xbmcgui.Dialog()
+        dirPath = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
+
+    return dirPath
+
 def main():
     positions = get_posts_from_bookmark()
     xbmcgui.Dialog().ok("positions", str(positions))
     xbmc.log( "context.item.savebookmarks: bookmark positions: %s" % str(positions), xbmc.LOGNOTICE )
 
-    dialog = xbmcgui.Dialog()
-    path = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
-
+    path = get_current_dir()
     if path != "":
         xbmc.log( "context.item.savebookmarks: save to: %s" % path, xbmc.LOGNOTICE )
         save_file_to_folder(path, positions)
@@ -46,10 +60,9 @@ def get_posts_from_bookmark():
     dbcon.row_factory = lambda cursor, row: row[0]
     dbcur =  dbcon.cursor()
 
-    itemPath = sys.listitem.getPath()
-    filePath = translateItemPath(itemPath)
-    dirPath = os.path.dirname(filePath) + os.sep
-    ret = dbcur.execute('SELECT timeInSeconds FROM main.bookmark WHERE idFile=(SELECT idFile FROM main.files WHERE idPath=(SELECT idPath FROM main.path WHERE strPath=?) AND strFilename=?) ORDER BY timeInSeconds',(dirPath, os.path.basename(filePath),)).fetchall()
+    fileName = get_file_name()
+    dirPath = get_current_dir()
+    ret = dbcur.execute('SELECT timeInSeconds FROM main.bookmark WHERE idFile=(SELECT idFile FROM main.files WHERE idPath=(SELECT idPath FROM main.path WHERE strPath=?) AND strFilename=?) ORDER BY timeInSeconds',(dirPath, fileName,)).fetchall()
     dbcon.close()
     return ret
 

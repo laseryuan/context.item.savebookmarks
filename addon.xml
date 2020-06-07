@@ -7,7 +7,7 @@
 	<extension point="kodi.context.item">
     <menu id="kodi.core.main">
       <item library="addon.py">
-        <label>Save STRM</label>
+        <label>Save Bookmarks</label>
         <visible>true</visible>
       </item>
     </menu>
