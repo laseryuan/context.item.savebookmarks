@@ -22,7 +22,7 @@ def save_file_to_folder(path, data):
 def get_file_name():
     itemPath = sys.listitem.getPath()
     filePath = translateItemPath(itemPath)
-    return os.path.basename(filePath)
+    return os.path.basename(filePath).decode('utf-8')
 
 def get_current_dir():
     itemPath = sys.listitem.getPath()
@@ -33,7 +33,7 @@ def get_current_dir():
         dialog = xbmcgui.Dialog()
         dirPath = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
 
-    return dirPath
+    return dirPath.decode('utf-8')
 
 def main():
     positions = get_posts_from_bookmark()
@@ -42,7 +42,7 @@ def main():
 
     path = get_current_dir()
     if path != "":
-        xbmc.log( "context.item.savebookmarks: save to: %s" % path, xbmc.LOGNOTICE )
+        xbmc.log( "context.item.savebookmarks: save to: %s" % path.encode('utf-8'), xbmc.LOGNOTICE )
         save_file_to_folder(path, positions)
 
 def getDbFile():
