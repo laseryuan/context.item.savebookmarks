@@ -7,6 +7,8 @@ import xbmc
 import xbmcgui
 import xbmcvfs
 
+import utils
+
 def make_filename(title):
     filename = title.replace("|", "_").replace("?", "_").replace("/", "_")
     return filename
@@ -30,8 +32,8 @@ def main():
         save_file_to_folder(path, positions)
 
 def getDbFile():
-    db_path = xbmc.translatePath('special://database').decode('utf-8')
-    return os.path.join(db_path, 'MyVideos107.db')
+    USERDATA = xbmc.translatePath('special://userdata').decode('utf-8')
+    return utils.Latest_DB(USERDATA, "MyVideos")
 
 def translateItemPath(itemPath):
     ret = itemPath

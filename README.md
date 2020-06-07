@@ -14,7 +14,7 @@ docker run -it --rm --name=kodi \
   bash
 
 cd ~/.kodi/addons/context.item.savebookmarks/
-python fork/tests.py
+pytest utils.py -s
 
 cat /home/kodi/.kodi/temp/kodi.log
 ```
