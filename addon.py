@@ -22,17 +22,14 @@ def save_file_to_folder(path, data):
 def get_file_name():
     itemPath = sys.listitem.getPath()
     filePath = translateItemPath(itemPath)
-    return os.path.basename(filePath).decode('utf-8')
+    if not "plugin://" in filePath:
+        filePath = os.path.basename(filePath)
+    return filePath.decode('utf-8')
 
-def get_current_dir():
+def get_file_dir():
     itemPath = sys.listitem.getPath()
     filePath = translateItemPath(itemPath)
     dirPath = os.path.dirname(filePath) + os.sep
-
-    if dirPath == "":
-        dialog = xbmcgui.Dialog()
-        dirPath = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
-
     return dirPath.decode('utf-8')
 
 def main():
@@ -40,7 +37,12 @@ def main():
     xbmcgui.Dialog().ok("positions", str(positions))
     xbmc.log( "context.item.savebookmarks: bookmark positions: %s" % str(positions), xbmc.LOGNOTICE )
 
-    path = get_current_dir()
+    path = get_file_dir()
+
+    if path == "" or "plugin://" in path:
+        dialog = xbmcgui.Dialog()
+        path = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
+
     if path != "":
         xbmc.log( "context.item.savebookmarks: save to: %s" % path.encode('utf-8'), xbmc.LOGNOTICE )
         save_file_to_folder(path, positions)
@@ -61,7 +63,11 @@ def get_posts_from_bookmark():
     dbcur =  dbcon.cursor()
 
     fileName = get_file_name()
-    dirPath = get_current_dir()
+    dirPath = get_file_dir()
+    #  dbcur.execute('SELECT strFilename FROM files').fetchall()
+    #  dbcur.execute('SELECT strPath FROM path').fetchall()
+    #  dbcur.execute('SELECT strFilename FROM files WHERE strFilename=?', [fileName]).fetchall()
+    #  dbcur.execute('SELECT strFilename FROM files WHERE strFilename=?', [itemPath]).fetchall()
     ret = dbcur.execute('SELECT timeInSeconds FROM main.bookmark WHERE idFile=(SELECT idFile FROM main.files WHERE idPath=(SELECT idPath FROM main.path WHERE strPath=?) AND strFilename=?) ORDER BY timeInSeconds',(dirPath, fileName,)).fetchall()
     dbcon.close()
     return ret

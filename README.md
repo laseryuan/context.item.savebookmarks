@@ -13,6 +13,9 @@ docker run -it --rm --name=kodi \
   lasery/codebench:kodi \
   bash
 
+  -v $(pwd)/../plugin.googledrive/:/home/kodi/.kodi/addons/plugin.googledrive/ `# mount the addon; needs to be enabled in kodi config`\
+  -v $(pwd)/../plugin.googledrive/fork/script.module.clouddrive.common:/home/kodi/.kodi/addons/script.module.clouddrive.common/ `# mount the dependency addon`\
+
 cd ~/.kodi/addons/context.item.savebookmarks/
 pytest utils.py -s
 
