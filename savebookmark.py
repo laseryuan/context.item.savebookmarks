@@ -40,13 +40,13 @@ def get_posts_from_bookmark():
     dbcon.row_factory = lambda cursor, row: row[0]
     dbcur =  dbcon.cursor()
 
-    fileName = get_file_name()
-    dirPath = get_file_dir()
+    idFile = getIdFile(dbcur)
+
     #  dbcur.execute('SELECT strFilename FROM files').fetchall()
     #  dbcur.execute('SELECT strPath FROM path').fetchall()
     #  dbcur.execute('SELECT strFilename FROM files WHERE strFilename=?', [fileName]).fetchall()
     #  dbcur.execute('SELECT strFilename FROM files WHERE strFilename=?', [itemPath]).fetchall()
-    ret = dbcur.execute('SELECT timeInSeconds FROM main.bookmark WHERE idFile=(SELECT idFile FROM main.files WHERE idPath=(SELECT idPath FROM main.path WHERE strPath=?) AND strFilename=?) ORDER BY timeInSeconds',(dirPath, fileName,)).fetchall()
+    ret = dbcur.execute('SELECT timeInSeconds FROM main.bookmark WHERE idFile=?', [idFile]).fetchall()
     dbcon.close()
     return ret
 
