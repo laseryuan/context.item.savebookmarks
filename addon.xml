@@ -6,7 +6,7 @@
 
 	<extension point="kodi.context.item">
     <menu id="kodi.core.main">
-      <item library="addon.py">
+      <item library="savebookmark.py">
         <label>Save Bookmarks</label>
         <visible>true</visible>
       </item>
