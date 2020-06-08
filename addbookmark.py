@@ -8,7 +8,7 @@ import xbmcgui
 import xbmcvfs
 
 import utils
-from common import *
+import common
 
 def main():
     positions = [10, 20]
@@ -18,11 +18,11 @@ def main():
     add_posts_to_bookmark(positions)
 
 def add_posts_to_bookmark(positions):
-    dbcon = database.connect(getDbFile())
+    dbcon = database.connect(common.getDbFile())
     dbcon.row_factory = lambda cursor, row: row[0]
     dbcur = dbcon.cursor()
 
-    idFile = getIdFile(dbcur)
+    idFile = common.getIdFile(dbcur)
 
     for timeInSeconds in positions:
         dbcur.execute("INSERT INTO bookmark(idFile, timeInSeconds, type, player) Values (?, ?, 0, ?)", (idFile, timeInSeconds, "VideoPlayer"))

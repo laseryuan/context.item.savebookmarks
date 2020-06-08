@@ -36,9 +36,4 @@ def translateItemPath(itemPath):
 def getIdFile(dbcur):
     fileName = get_file_name()
     dirPath = get_file_dir()
-
-    #  dbcur.execute('SELECT player FROM bookmark').fetchall()
-    idFiles = dbcur.execute('SELECT idFile FROM main.files WHERE idPath=(SELECT idPath FROM main.path WHERE strPath=?) AND strFilename=?',(dirPath, fileName,)).fetchall()
-    if len(idFiles) < 1:
-        raise RuntimeError("Can't get idFile!")
-    return idFiles[-1]
+    return utils.getIdFileInDb(dbcur, fileName, dirPath)
