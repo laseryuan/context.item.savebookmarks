@@ -8,6 +8,7 @@ import xbmcgui
 import xbmcvfs
 
 import utils
+from common import *
 
 def make_filename(title):
     filename = title.replace("|", "_").replace("?", "_").replace("/", "_")
@@ -18,19 +19,6 @@ def save_file_to_folder(path, data):
     f = xbmcvfs.File (file, 'w')
     result = f.write(str(data))
     f.close()
-
-def get_file_name():
-    itemPath = sys.listitem.getPath()
-    filePath = translateItemPath(itemPath)
-    if not "plugin://" in filePath:
-        filePath = os.path.basename(filePath)
-    return filePath.decode('utf-8')
-
-def get_file_dir():
-    itemPath = sys.listitem.getPath()
-    filePath = translateItemPath(itemPath)
-    dirPath = os.path.dirname(filePath) + os.sep
-    return dirPath.decode('utf-8')
 
 def main():
     positions = get_posts_from_bookmark()
@@ -46,16 +34,6 @@ def main():
     if path != "":
         xbmc.log( "context.item.savebookmarks: save to: %s" % path.encode('utf-8'), xbmc.LOGNOTICE )
         save_file_to_folder(path, positions)
-
-def getDbFile():
-    USERDATA = xbmc.translatePath('special://userdata').decode('utf-8')
-    return utils.Latest_DB(USERDATA, "MyVideos")
-
-def translateItemPath(itemPath):
-    ret = itemPath
-    if "PlayMedia" in itemPath:
-        ret = re.findall('"([^"]*)"', ret).pop()
-    return ret
 
 def get_posts_from_bookmark():
     dbcon = database.connect(getDbFile())

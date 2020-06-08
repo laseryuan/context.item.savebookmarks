@@ -21,8 +21,25 @@ def Latest_DB(USERDATA, DB):
     else:
         return False
 
+def getHash(string):
+    string = string.lower()
+    bytes = bytearray(string)
+    crc = 0xffffffff;
+    for b in bytes:
+        crc = crc ^ (b << 24)
+        for i in range(8):
+            if (crc & 0x80000000): crc = (crc << 1) ^ 0x04C11DB7
+            else: crc = crc << 1;
+        crc = crc & 0xFFFFFFFF
+    return "%08x" % crc
+
 def test_Latest_DB():
     #  USERDATA = xbmc.translatePath(os.path.join('special://home/userdata'))
     USERDATA = '/home/kodi/.kodi/userdata/'
     ret = Latest_DB(USERDATA, "MyVideos")
     assert "MyVideos" in ret
+
+def test_getHash():
+    string = "Thumbnail-Name"
+    hash = getHash(string)
+    assert hash == 'ed7bca40'

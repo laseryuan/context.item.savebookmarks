@@ -10,6 +10,10 @@
         <label>Save Bookmarks</label>
         <visible>true</visible>
       </item>
+      <item library="addbookmark.py">
+        <label>Import Bookmarks</label>
+        <visible>true</visible>
+      </item>
     </menu>
 	</extension>
   
