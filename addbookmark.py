@@ -7,8 +7,10 @@ import xbmc
 import xbmcgui
 import xbmcvfs
 
-import utils
 import common
+import utils
+from kodidb import KodiDB
+from common import Common
 
 def main():
     positions = [10, 20]
@@ -18,16 +20,11 @@ def main():
     add_posts_to_bookmark(positions)
 
 def add_posts_to_bookmark(positions):
-    dbcon = database.connect(common.getDbFile())
-    dbcon.row_factory = lambda cursor, row: row[0]
-    dbcur = dbcon.cursor()
-
-    idFile = common.getIdFile(dbcur)
+    common = Common()
+    idFile = common.getIdFile()
 
     for timeInSeconds in positions:
-        dbcur.execute("INSERT INTO bookmark(idFile, timeInSeconds, type, player) Values (?, ?, 0, ?)", (idFile, timeInSeconds, "VideoPlayer"))
-    dbcon.commit()
-    dbcon.close()
+        common.kodidb.add_position(idFile, timeInSeconds)
 
 if __name__ == '__main__':
     main()

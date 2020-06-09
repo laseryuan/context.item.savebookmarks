@@ -17,7 +17,11 @@ docker run -it --rm --name=kodi \
   -v $(pwd)/../plugin.googledrive/fork/script.module.clouddrive.common:/home/kodi/.kodi/addons/script.module.clouddrive.common/ `# mount the dependency addon`\
 
 cd ~/.kodi/addons/context.item.savebookmarks/
+pytest utils.py kodidb.py
+
 pytest utils.py -s
+pytest kodidb.py -s
+pytest kodidb.py::test_get_posts_from_bookmark -s
 
 cat /home/kodi/.kodi/temp/kodi.log
 ```

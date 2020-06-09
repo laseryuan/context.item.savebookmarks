@@ -8,32 +8,30 @@ import xbmcgui
 import xbmcvfs
 
 import utils
+from kodidb import KodiDB
 
+class Common:
+    def __init__(self):
+        self.kodidb = KodiDB(self.getDbFile())
 
-def getDbFile():
-    USERDATA = xbmc.translatePath('special://userdata').decode('utf-8')
-    return utils.Latest_DB(USERDATA, "MyVideos")
+    def getDbFile(self):
+        USERDATA = xbmc.translatePath('special://userdata').decode('utf-8')
+        return utils.Latest_DB(USERDATA, "MyVideos")
 
-def get_file_name():
-    itemPath = sys.listitem.getPath()
-    filePath = translateItemPath(itemPath)
-    if not "plugin://" in filePath:
-        filePath = os.path.basename(filePath)
-    return filePath.decode('utf-8')
+    def get_file_name(self):
+        itemPath = sys.listitem.getPath()
+        filePath = utils.translateItemPath(itemPath)
+        if not "plugin://" in filePath:
+            filePath = os.path.basename(filePath)
+        return filePath.decode('utf-8')
 
-def get_file_dir():
-    itemPath = sys.listitem.getPath()
-    filePath = translateItemPath(itemPath)
-    dirPath = os.path.dirname(filePath) + os.sep
-    return dirPath.decode('utf-8')
+    def get_file_dir(self):
+        itemPath = sys.listitem.getPath()
+        filePath = utils.translateItemPath(itemPath)
+        dirPath = os.path.dirname(filePath) + os.sep
+        return dirPath.decode('utf-8')
 
-def translateItemPath(itemPath):
-    ret = itemPath
-    if "PlayMedia" in itemPath:
-        ret = re.findall('"([^"]*)"', ret).pop()
-    return ret
-
-def getIdFile(dbcur):
-    fileName = get_file_name()
-    dirPath = get_file_dir()
-    return utils.getIdFileInDb(dbcur, fileName, dirPath)
+    def getIdFile(self):
+        fileName = self.get_file_name()
+        dirPath = self.get_file_dir()
+        return self.kodidb.getIdFileInDb(fileName, dirPath)

@@ -7,8 +7,9 @@ import xbmc
 import xbmcgui
 import xbmcvfs
 
+from kodidb import KodiDB
+from common import Common
 import utils
-import common
 
 def make_filename(title):
     filename = title.replace("|", "_").replace("?", "_").replace("/", "_")
@@ -21,13 +22,11 @@ def save_bmk_to_folder(path, data):
     f.close()
 
 def main():
-    dbcon = database.connect(common.getDbFile())
-    dbcon.row_factory = lambda cursor, row: row[0]
-    dbcur =  dbcon.cursor()
+    common = Common()
 
-    idFile = common.getIdFile(dbcur)
+    idFile = common.getIdFile()
+    positions = common.kodidb.get_posts_from_bookmark(idFile)
 
-    positions = utils.get_posts_from_bookmark(dbcur, idFile)
     xbmcgui.Dialog().ok("positions", str(positions))
     xbmc.log( "context.item.savebookmarks: bookmark positions: %s" % str(positions), xbmc.LOGNOTICE )
 
