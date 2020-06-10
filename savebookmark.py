@@ -25,7 +25,8 @@ def main():
     common = Common()
 
     idFile = common.getIdFile()
-    positions = common.kodidb.get_posts_from_bookmark(idFile)
+    bookmarks = common.kodidb.get_bookmark_by_idfile(idFile)
+    positions= map(lambda x: x['timeInSeconds'], bookmarks)
 
     xbmcgui.Dialog().ok("positions", str(positions))
     xbmc.log( "context.item.savebookmarks: bookmark positions: %s" % str(positions), xbmc.LOGNOTICE )
