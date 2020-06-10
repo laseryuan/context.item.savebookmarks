@@ -13,6 +13,8 @@ from kodidb import KodiDB
 class Common:
     def __init__(self):
         self.kodidb = KodiDB(self.getDbFile())
+        self.path = self.get_file_dir()
+        self.get_work_dir()
 
     def getDbFile(self):
         USERDATA = xbmc.translatePath('special://userdata').decode('utf-8')
@@ -35,3 +37,9 @@ class Common:
         fileName = self.get_file_name()
         dirPath = self.get_file_dir()
         return self.kodidb.getIdFileInDb(fileName, dirPath)
+
+    def get_work_dir(self):
+        if self.path == "" or "plugin://" in self.path:
+            dialog = xbmcgui.Dialog()
+            self.path = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
+
