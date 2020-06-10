@@ -53,7 +53,7 @@ class SaveBookmark():
 
         if self.path != "":
             xbmc.log( "context.item.savebookmarks: save to: %s" % self.path.encode('utf-8'), xbmc.LOGNOTICE )
-            self.save_bmk_posts_to_file(positions)
+            self.save_bmk_posts_to_file(utils.round_positions(positions))
 
 def main():
     savebookmark = SaveBookmark()

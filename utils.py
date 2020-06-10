@@ -38,6 +38,9 @@ def make_filename(title):
     filename = title.replace("|", "_").replace("?", "_").replace("/", "_")
     return filename
 
+def round_positions(positions):
+    return map(lambda x: int(x), positions)
+
 def translateItemPath(itemPath):
     ret = itemPath
     if "PlayMedia" in itemPath:
@@ -54,3 +57,7 @@ def test_getHash():
     string = "Thumbnail-Name"
     hash = getHash(string)
     assert hash == 'ed7bca40'
+
+def test_round_positions():
+    ret = round_positions([1.0, 2.1])
+    assert ret == [1, 2]
