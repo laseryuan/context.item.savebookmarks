@@ -34,6 +34,10 @@ def getHash(string):
         crc = crc & 0xFFFFFFFF
     return "%08x" % crc
 
+def make_filename(title):
+    filename = title.replace("|", "_").replace("?", "_").replace("/", "_")
+    return filename
+
 def translateItemPath(itemPath):
     ret = itemPath
     if "PlayMedia" in itemPath:
