@@ -10,9 +10,10 @@ import xbmcvfs
 import utils
 from kodidb import KodiDB
 
-class Common:
+class Bookmark:
     def __init__(self):
         self.kodidb = KodiDB(self.getDbFile())
+        self.idFile = self.getIdFile()
         self.path = self.get_file_dir()
         self.get_work_dir()
 

@@ -7,21 +7,19 @@ import xbmc
 import xbmcgui
 import xbmcvfs
 
-import common
 import utils
 from kodidb import KodiDB
-from common import Common
+from bookmark import Bookmark
 
-class AddBookmark():
+class AddBookmark(Bookmark):
     def __init__(self):
-        self.common = Common()
-        self.idFile = self.common.getIdFile()
+        Bookmark.__init__(self)
 
     def add_posts_to_bookmark(self, positions):
         xbmcgui.Dialog().ok("positions", str(positions))
         xbmc.log( "context.item.savebookmarks: bookmark positions: %s" % str(positions), xbmc.LOGNOTICE )
         for timeInSeconds in positions:
-            self.common.kodidb.add_position(self.idFile, timeInSeconds)
+            self.kodidb.add_position(self.idFile, timeInSeconds)
 
 def main():
     addbookmark = AddBookmark()
