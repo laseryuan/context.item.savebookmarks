@@ -24,5 +24,7 @@ pytest kodidb.py -s
 pytest kodidb.py::test_get_posts_from_bookmark -s
 
 cat /home/kodi/.kodi/temp/kodi.log
+
+git archive --prefix context.item.savebookmarks/ --format=zip -o master.zip HEAD
 ```
 

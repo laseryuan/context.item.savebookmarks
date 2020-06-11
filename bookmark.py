@@ -13,7 +13,10 @@ from kodidb import KodiDB
 class Bookmark:
     def __init__(self):
         self.kodidb = KodiDB(self.getDbFile())
-        self.idFile = self.getIdFile()
+        itemPath = sys.listitem.getPath()
+        xbmc.log( "context.item.savebookmarks: itemPath: %s" % itemPath, xbmc.LOGNOTICE )
+        self.filePath = utils.translateItemPath(itemPath)
+        self.idFile = self.get_idFile()
         self.path = self.get_file_dir()
         self.get_work_dir()
 
@@ -22,19 +25,16 @@ class Bookmark:
         return utils.Latest_DB(USERDATA, "MyVideos")
 
     def get_file_name(self):
-        itemPath = sys.listitem.getPath()
-        filePath = utils.translateItemPath(itemPath)
+        filePath = self.filePath
         if not "plugin://" in filePath:
             filePath = os.path.basename(filePath)
         return filePath.decode('utf-8')
 
     def get_file_dir(self):
-        itemPath = sys.listitem.getPath()
-        filePath = utils.translateItemPath(itemPath)
-        dirPath = os.path.dirname(filePath) + os.sep
+        dirPath = os.path.dirname(self.filePath) + os.sep
         return dirPath.decode('utf-8')
 
-    def getIdFile(self):
+    def get_idFile(self):
         fileName = self.get_file_name()
         dirPath = self.get_file_dir()
         return self.kodidb.getIdFileInDb(fileName, dirPath)
