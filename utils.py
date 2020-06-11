@@ -1,6 +1,7 @@
 import glob
 import os
 import re
+import urllib
 from sqlite3 import dbapi2 as database
 
 # Function to find the latest version of a database
@@ -42,7 +43,7 @@ def round_positions(positions):
     return map(lambda x: int(x), positions)
 
 def translateItemPath(itemPath):
-    ret = itemPath
+    ret = urllib.unquote(itemPath)
     if "PlayMedia" in itemPath:
         ret = re.findall('"([^"]*)"', ret).pop()
     return ret
@@ -61,3 +62,7 @@ def test_getHash():
 def test_round_positions():
     ret = round_positions([1.0, 2.1])
     assert ret == [1, 2]
+
+def test_translateItemPath():
+    itemPath = 'favourites://PlayMedia(%22plugin%3a%2f%2fplugin.googledrive%2f%3fitem_id%3d1pj-j1YkzjKX8vyggsJiMeJr7k1-vEfwc%26driveid%3d12202755082028000981%26item_driveid%3d12202755082028000981%26action%3dplay%26content_type%3dvideo%22)/'
+    translateItemPath(itemPath)
