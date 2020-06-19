@@ -13,7 +13,7 @@ class KodiDB:
         self.dbcon.close()
 
     def get_bookmark_by_idfile(self, idFile):
-        ret = self.dbcur.execute('SELECT * FROM main.bookmark WHERE idFile=?', [idFile]).fetchall()
+        ret = self.dbcur.execute('SELECT * FROM main.bookmark WHERE idFile=? AND type=0', [idFile]).fetchall()
         return ret
 
     def getIdFileInDb(self, fileName, dirPath):
