@@ -15,6 +15,10 @@ class AddBookmark(Bookmark):
     def __init__(self):
         Bookmark.__init__(self)
 
+    def get_positions(self):
+        plot = self.listitem.getVideoInfoTag().getPlot()
+        return utils.retrieve_positions(plot)
+
     def add_posts_to_bookmark(self, positions):
         xbmcgui.Dialog().ok("positions", str(positions))
         xbmc.log( "context.item.savebookmarks: bookmark positions: %s" % str(positions), xbmc.LOGNOTICE )
@@ -24,7 +28,7 @@ class AddBookmark(Bookmark):
 def main():
     addbookmark = AddBookmark()
 
-    positions = [10, 20]
+    positions = addbookmark.get_positions()
     addbookmark.add_posts_to_bookmark(positions)
 
 if __name__ == '__main__':

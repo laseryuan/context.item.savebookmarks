@@ -48,6 +48,14 @@ def translateItemPath(itemPath):
         ret = re.findall('"([^"]*)"', ret).pop()
     return ret
 
+def retrieve_positions(string):
+    inBrackets = re.search(r"\[(.+?)\]", string).group(1)
+    if not re.match(r"([0-9]+, )+[0-9]+", inBrackets):
+        print "No positions found"
+        return []
+    numbers = map(int, inBrackets.split(","))
+    return numbers
+
 def test_Latest_DB():
     #  USERDATA = xbmc.translatePath(os.path.join('special://home/userdata'))
     USERDATA = '/home/kodi/.kodi/userdata/'
@@ -66,3 +74,12 @@ def test_round_positions():
 def test_translateItemPath():
     itemPath = 'favourites://PlayMedia(%22plugin%3a%2f%2fplugin.googledrive%2f%3fitem_id%3d1pj-j1YkzjKX8vyggsJiMeJr7k1-vEfwc%26driveid%3d12202755082028000981%26item_driveid%3d12202755082028000981%26action%3dplay%26content_type%3dvideo%22)/'
     translateItemPath(itemPath)
+
+def test_retrieve_positions():
+    plot = '[1, 2, 3]'
+    ret  = retrieve_positions(plot)
+    assert ret == [1, 2, 3]
+
+    plot = '[star] [test]'
+    ret  = retrieve_positions(plot)
+    assert ret == []

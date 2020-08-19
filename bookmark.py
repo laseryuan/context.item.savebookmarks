@@ -13,7 +13,8 @@ from kodidb import KodiDB
 class Bookmark:
     def __init__(self):
         self.kodidb = KodiDB(self.getDbFile())
-        itemPath = sys.listitem.getPath()
+        self.listitem = sys.listitem
+        itemPath = self.listitem.getPath()
         xbmc.log( "context.item.savebookmarks: itemPath: %s" % itemPath, xbmc.LOGNOTICE )
         self.filePath = utils.translateItemPath(itemPath)
         self.idFile = self.get_idFile()
