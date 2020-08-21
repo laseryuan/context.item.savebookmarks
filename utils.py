@@ -50,10 +50,15 @@ def translateItemPath(itemPath):
 
 def retrieve_positions(string):
     inBrackets = re.search(r"\[(.+?)\]", string).group(1)
-    if not re.match(r"([0-9]+, )+[0-9]+", inBrackets):
-        print "No positions found"
-        return []
-    numbers = map(int, inBrackets.split(","))
+    numbers = []
+    if re.match(r"^[0-9]+$", inBrackets):
+        numbers.append(int(inBrackets))
+    else:
+        if not re.match(r"([0-9]+, )+[0-9]+", inBrackets):
+            print "No positions found"
+            return numbers
+        else:
+            numbers = map(int, inBrackets.split(","))
     return numbers
 
 def test_Latest_DB():
@@ -83,3 +88,7 @@ def test_retrieve_positions():
     plot = '[star] [test]'
     ret  = retrieve_positions(plot)
     assert ret == []
+
+    plot = '[123]'
+    ret  = retrieve_positions(plot)
+    assert ret == [123]
