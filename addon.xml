@@ -17,6 +17,10 @@
     </menu>
 	</extension>
   
+	<extension point="xbmc.python.pluginsource" library="addon.py">
+		<provides>image audio video</provides>
+	</extension>
+
   <extension point="xbmc.addon.metadata">
     <summary lang="en">Export bookmarks to file</summary>
     <description lang="en">export bookmarks to file</description>

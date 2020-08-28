@@ -17,14 +17,16 @@ class SaveBookmark(Bookmark):
         self.bookmarks = self.kodidb.get_bookmark_by_idfile(self.idFile)
 
     def save_bmk_posts_to_file(self, data):
-        file = self.path + '/' + utils.make_filename(sys.listitem.getLabel()) + '.bmk'
+        file = self.path + '/' + utils.get_export_bookmarks_file_name()
         f = xbmcvfs.File (file, 'w')
         result = f.write(str(data))
         f.close()
 
     def save_imgs_to_folder(self, image, seconds):
-        file = self.path + '/' + utils.make_filename(sys.listitem.getLabel()) + '-thumb-' + str(int(seconds)) + '.jpg'
-        xbmcvfs.copy (image, file)
+        file = self.path + '/' + utils.get_export_bookmarks_image_name(
+                                    sys.listitem.getLabel(), str(int(seconds))
+                                 )
+        xbmcvfs.copy(image, file)
 
     def save_thumbnails(self):
         if self.path != "":

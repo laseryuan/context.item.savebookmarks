@@ -39,6 +39,30 @@ def make_filename(title):
     filename = title.replace("|", "_").replace("?", "_").replace("/", "_")
     return filename
 
+def test_make_filename():
+    string = 'ab|c?d/e.txt'
+    ret = make_filename(string)
+    assert ret == 'ab_c_d_e.txt'
+
+def get_export_bookmarks_file_name(title):
+    file = make_filename(title) + '.bmk'
+    return file
+
+def test_get_export_bookmarks_file_name():
+    string = 'videofilename'
+    ret = get_export_bookmarks_file_name(string)
+    assert ret == 'videofilename.bmk'
+
+def get_export_bookmarks_image_name(title, seconds):
+    file = make_filename(title) + '-thumb-' + str(int(seconds)) + '.jpg'
+    return file
+
+def test_get_export_bookmarks_image_name():
+    title = 'videofilename'
+    seconds = 120
+    ret = get_export_bookmarks_image_name(title, seconds)
+    assert ret == 'videofilename-thumb-120.jpg'
+
 def round_positions(positions):
     return map(lambda x: int(x), positions)
 
@@ -61,6 +85,25 @@ def retrieve_positions(string):
             numbers = map(int, inBrackets.split(","))
     return numbers
 
+def retrieve_position_from_thumb(string):
+    res = re.search(r"thumb-(\d+)\.\w", string)
+    ret = 0
+    if (res):
+        num = res.group(1)
+        ret = int(num)
+    else:
+        print "No position found in thumb file name"
+    return ret
+
+def test_retrieve_position_from_thumb():
+    string = 'videofilename-thumb-120.jpg'
+    ret = retrieve_position_from_thumb(string)
+    assert ret == 120
+
+    string = 'videofilename-120.jpg'
+    ret = retrieve_position_from_thumb(string)
+    assert ret == 0
+
 def test_Latest_DB():
     #  USERDATA = xbmc.translatePath(os.path.join('special://home/userdata'))
     USERDATA = '/home/kodi/.kodi/userdata/'
@@ -78,7 +121,8 @@ def test_round_positions():
 
 def test_translateItemPath():
     itemPath = 'favourites://PlayMedia(%22plugin%3a%2f%2fplugin.googledrive%2f%3fitem_id%3d1pj-j1YkzjKX8vyggsJiMeJr7k1-vEfwc%26driveid%3d12202755082028000981%26item_driveid%3d12202755082028000981%26action%3dplay%26content_type%3dvideo%22)/'
-    translateItemPath(itemPath)
+    ret = translateItemPath(itemPath)
+    assert ret == 'plugin://plugin.googledrive/?item_id=1pj-j1YkzjKX8vyggsJiMeJr7k1-vEfwc&driveid=12202755082028000981&item_driveid=12202755082028000981&action=play&content_type=video'
 
 def test_retrieve_positions():
     plot = '[1, 2, 3]'
@@ -92,3 +136,14 @@ def test_retrieve_positions():
     plot = '[123]'
     ret  = retrieve_positions(plot)
     assert ret == [123]
+
+def parameters_string_to_dict(parameters):
+    ''' Convert parameters encoded in a URL to a dict. '''
+    paramDict = {}
+    if parameters:
+        paramPairs = parameters[1:].split("&")
+        for paramsPair in paramPairs:
+            paramSplits = paramsPair.split('=')
+            if (len(paramSplits)) == 2:
+                paramDict[paramSplits[0]] = paramSplits[1]
+    return paramDict

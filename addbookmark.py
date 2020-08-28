@@ -25,6 +25,13 @@ class AddBookmark(Bookmark):
         for timeInSeconds in positions:
             self.kodidb.add_position(self.idFile, timeInSeconds)
 
+    def add_thumb(self, thumb, position):
+        import ipdb; ipdb.set_trace()
+        from IPython import embed; embed(colors="neutral")
+        xbmcvfs.copy(image, file)
+        xbmcvfs.delete(image, file)
+        return
+
 def main():
     addbookmark = AddBookmark()
 
