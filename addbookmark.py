@@ -11,9 +11,9 @@ import utils
 from kodidb import KodiDB
 from bookmark import Bookmark
 
-class AddBookmark(Bookmark):
+class AddBookmark():
     def __init__(self):
-        Bookmark.__init__(self)
+        self.bookmark = Bookmark()
 
     def get_positions(self):
         plot = sys.listitem.getVideoInfoTag().getPlot()
@@ -23,11 +23,9 @@ class AddBookmark(Bookmark):
         xbmcgui.Dialog().ok("positions", str(positions))
         xbmc.log( "context.item.savebookmarks: bookmark positions: %s" % str(positions), xbmc.LOGNOTICE )
         for timeInSeconds in positions:
-            self.kodidb.add_position(self.idFile, timeInSeconds)
+            self.bookmark.add_position(timeInSeconds)
 
     def add_thumb(self, thumb, position):
-        import ipdb; ipdb.set_trace()
-        from IPython import embed; embed(colors="neutral")
         xbmcvfs.copy(image, file)
         xbmcvfs.delete(image, file)
         return

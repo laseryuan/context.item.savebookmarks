@@ -39,3 +39,5 @@ class Bookmark:
             dialog = xbmcgui.Dialog()
             self.path = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
 
+    def add_position(self, timeInSeconds):
+        self.kodidb.add_position(self.idFile, timeInSeconds)
