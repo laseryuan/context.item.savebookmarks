@@ -16,7 +16,7 @@ class AddBookmark(Bookmark):
         Bookmark.__init__(self)
 
     def get_positions(self):
-        plot = self.listitem.getVideoInfoTag().getPlot()
+        plot = sys.listitem.getVideoInfoTag().getPlot()
         return utils.retrieve_positions(plot)
 
     def add_posts_to_bookmark(self, positions):

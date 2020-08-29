@@ -11,14 +11,20 @@ import utils
 from kodidb import KodiDB
 
 class Bookmark:
-    def __init__(self):
+    def __init__(self, filePath = None):
         self.kodidb = self.get_kodidb()
-        self.listitem = sys.listitem
-        itemPath = self.listitem.getPath()
-        self.filePath = utils.translateItemPath(itemPath)
+        if filePath:
+            self.filePath = filePath
+        else:
+            self.filePath = self.get_file_path()
         self.path = utils.BookmarkUtils.get_file_dir(self.filePath)
         self.idFile = self.get_idFile()
         self.get_work_dir()
+
+    def get_file_path(self):
+        itemPath = sys.listitem.getPath()
+        ret = utils.translateItemPath(itemPath)
+        return ret
 
     def get_kodidb(self):
         USERDATA = xbmc.translatePath('special://userdata').decode('utf-8')
