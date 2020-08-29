@@ -9,15 +9,14 @@ import xbmcvfs
 
 import utils
 from kodidb import KodiDB
-
 class Bookmark:
-    def __init__(self, filePath = None):
+    def __init__(self, itemPath = None):
         self.kodidb = self.get_kodidb()
-        if filePath:
-            self.filePath = filePath
+        if itemPath:
+            self.itemPath = itemPath
         else:
-            self.filePath = self.get_file_path()
-        self.path = utils.BookmarkUtils.get_file_dir(self.filePath)
+            self.itemPath = self.get_file_path()
+        self.path = utils.BookmarkUtils.get_file_dir(self.itemPath)
         self.idFile = self.get_idFile()
         self.get_work_dir()
 
@@ -31,7 +30,7 @@ class Bookmark:
         return KodiDB( utils.Latest_DB(USERDATA, "MyVideos") )
 
     def get_idFile(self):
-        fileName = utils.BookmarkUtils.get_file_name(self.filePath)
+        fileName = utils.BookmarkUtils.get_file_name(self.itemPath)
         return self.kodidb.getIdFileInDb(fileName, self.path)
 
     def get_work_dir(self):

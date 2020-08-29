@@ -150,26 +150,26 @@ def parameters_string_to_dict(parameters):
 
 class BookmarkUtils:
     @staticmethod
-    def get_file_name(filePath):
-        if not "plugin://" in filePath:
-            filePath = os.path.basename(filePath)
-        return filePath.decode('utf-8')
+    def get_file_name(itemPath):
+        if not "plugin://" in itemPath:
+            itemPath = os.path.basename(itemPath)
+        return itemPath.decode('utf-8')
 
     @staticmethod
-    def get_file_dir(filePath):
-        dirPath = os.path.dirname(filePath) + os.sep
+    def get_file_dir(itemPath):
+        dirPath = os.path.dirname(itemPath) + os.sep
         return dirPath.decode('utf-8')
 
 def test_get_file_name():
-    filePath = u'plugin://plugin.googledrive/?item_id=18cvSs9r93ysjiyt7YG6AoNWUzaUksBUnnA&driveid=10773356246826176512&item_driveid=00075374721629811014&action=play&content_type=video'
-    ret = BookmarkUtils.get_file_name(filePath)
+    itemPath = u'plugin://plugin.googledrive/?item_id=18cvSs9r93ysjiyt7YG6AoNWUzaUksBUnnA&driveid=10773356246826176512&item_driveid=00075374721629811014&action=play&content_type=video'
+    ret = BookmarkUtils.get_file_name(itemPath)
     assert ret == u'plugin://plugin.googledrive/?item_id=18cvSs9r93ysjiyt7YG6AoNWUzaUksBUnnA&driveid=10773356246826176512&item_driveid=00075374721629811014&action=play&content_type=video'
 
-    filePath = '/home/kodi/Videos/back to future/back to the future.mp4'
-    ret = BookmarkUtils.get_file_name(filePath)
+    itemPath = '/home/kodi/Videos/back to future/back to the future.mp4'
+    ret = BookmarkUtils.get_file_name(itemPath)
     assert ret == u'back to the future.mp4'
 
 def test_get_file_dir():
-    filePath = 'plugin://plugin.googledrive/?item_id=18cvSs9r93ysjiyt7YG6AoNWUzaUksBUnnA&driveid=10773356246826176512&item_driveid=00075374721629811014&action=play&content_type=video'
-    ret = BookmarkUtils.get_file_dir(filePath)
+    itemPath = 'plugin://plugin.googledrive/?item_id=18cvSs9r93ysjiyt7YG6AoNWUzaUksBUnnA&driveid=10773356246826176512&item_driveid=00075374721629811014&action=play&content_type=video'
+    ret = BookmarkUtils.get_file_dir(itemPath)
     assert ret == u'plugin://plugin.googledrive/'
