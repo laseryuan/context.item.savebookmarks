@@ -23,8 +23,11 @@ class KodiDB:
             raise RuntimeError("Can't get idFile!")
         return idFiles[-1]['idFile']
 
-    def add_position(self, idFile, timeInSeconds):
-        self.dbcur.execute("INSERT INTO bookmark(idFile, timeInSeconds, type, player) Values (?, ?, 0, ?)", (idFile, timeInSeconds, "VideoPlayer"))
+    def add_position(self, idFile, timeInSeconds, image = None):
+        if image:
+            self.dbcur.execute("INSERT INTO bookmark(idFile, timeInSeconds, type, player, thumbNailImage) Values (?, ?, 0, ?, ?)", (idFile, timeInSeconds, "VideoPlayer", image))
+        else:
+            self.dbcur.execute("INSERT INTO bookmark(idFile, timeInSeconds, type, player) Values (?, ?, 0, ?)", (idFile, timeInSeconds, "VideoPlayer"))
         self.dbcon.commit()
 
 def test_get_bookmark_by_idfile():

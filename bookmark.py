@@ -38,5 +38,13 @@ class Bookmark:
             dialog = xbmcgui.Dialog()
             self.path = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
 
-    def add_position(self, timeInSeconds):
-        self.kodidb.add_position(self.idFile, timeInSeconds)
+    def add_position(self, timeInSeconds, image = None):
+        thumb = None
+        if image:
+            thumb = u'special://profile/Thumbnails/Video/Bookmarks/%s_%s.jpg' % ( utils.getHash(image), timeInSeconds )
+            xbmcvfs.copy(image, thumb)
+
+        self.kodidb.add_position(self.idFile, timeInSeconds, thumb)
+
+        if image:
+            xbmcvfs.delete(image)

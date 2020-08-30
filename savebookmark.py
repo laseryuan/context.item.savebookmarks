@@ -17,9 +17,9 @@ class SaveBookmark(Bookmark):
         self.bookmarks = self.kodidb.get_bookmark_by_idfile(self.idFile)
 
     def save_bmk_posts_to_file(self, data):
-        file = self.path + '/' + utils.get_export_bookmarks_file_name()
+        file = self.path + '/' + utils.get_export_bookmarks_file_name(sys.listitem.getLabel())
         f = xbmcvfs.File (file, 'w')
-        result = f.write(str(data))
+        f.write(str(data))
         f.close()
 
     def save_imgs_to_folder(self, image, seconds):
