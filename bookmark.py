@@ -13,6 +13,7 @@ class Bookmark:
     def __init__(self, itemPath = None):
         self.kodidb = self.kodidb_conn()
         self.save_dir = None
+        self.bookmarks = None
         self.itemPath = itemPath or utils.translateItemPath(sys.listitem.getPath())
         self.file_dir = utils.BookmarkUtils.get_file_dir(self.itemPath)
         self.idFile = self.idFile(self.itemPath)
@@ -43,3 +44,38 @@ class Bookmark:
 
         if image:
             xbmcvfs.delete(image)
+
+    def save_bmk_posts_to_file(self, data):
+        file = self.get_save_dir() + '/' + utils.get_export_bookmarks_file_name(sys.listitem.getLabel())
+        f = xbmcvfs.File (file, 'w')
+        f.write(str(data))
+        f.close()
+
+    def save_imgs_to_folder(self, image, seconds):
+        file = self.get_save_dir() + '/' + utils.get_export_bookmarks_image_name(
+                                    sys.listitem.getLabel(), str(int(seconds))
+                                 )
+        xbmcvfs.copy(image, file)
+
+    def get_bookmarks(self):
+        if not self.bookmarks:
+            self.bookmarks = self.kodidb.get_bookmark_by_idfile(self.idFile)
+        return self.bookmarks
+
+    def save_thumbnails(self):
+        if self.get_save_dir() != "":
+            for bookmark in self.get_bookmarks():
+                image = bookmark['thumbNailImage']
+                if image:
+                    xbmc.log( "context.item.savebookmarks: same thumbnail: %s" % image, xbmc.LOGNOTICE )
+                    seconds = bookmark['timeInSeconds']
+                    self.save_imgs_to_folder(image, seconds)
+
+    def save_positions(self):
+        positions = map(lambda x: x['timeInSeconds'], self.get_bookmarks())
+        xbmcgui.Dialog().ok("positions", str(positions))
+        xbmc.log( "context.item.savebookmarks: bookmark positions: %s" % str(positions), xbmc.LOGNOTICE )
+
+        if self.get_save_dir() != "":
+            xbmc.log( "context.item.savebookmarks: save to: %s" % self.get_save_dir().encode('utf-8'), xbmc.LOGNOTICE )
+            self.save_bmk_posts_to_file(utils.round_positions(positions))

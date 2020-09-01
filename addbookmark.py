@@ -11,27 +11,20 @@ import utils
 from kodidb import KodiDB
 from bookmark import Bookmark
 
-class AddBookmark():
-    def __init__(self, itemPath = None):
-        self.bookmark = Bookmark(itemPath)
+def get_positions():
+    plot = sys.listitem.getVideoInfoTag().getPlot()
+    return utils.retrieve_positions(plot)
 
-    def get_positions(self):
-        plot = sys.listitem.getVideoInfoTag().getPlot()
-        return utils.retrieve_positions(plot)
-
-    def add_posts_to_bookmark(self, positions):
-        xbmcgui.Dialog().ok("positions", str(positions))
-        for timeInSeconds in positions:
-            self.bookmark.add_position(timeInSeconds)
-
-    def add_thumb(self, thumb, position):
-        self.bookmark.add_position(position, thumb)
+def add_posts_to_bookmark(bookmark, positions):
+    xbmcgui.Dialog().ok("positions", str(positions))
+    for timeInSeconds in positions:
+        bookmark.add_position(timeInSeconds)
 
 def main():
-    addbookmark = AddBookmark()
+    bookmark = Bookmark()
 
-    positions = addbookmark.get_positions()
-    addbookmark.add_posts_to_bookmark(positions)
+    positions = get_positions()
+    add_posts_to_bookmark(bookmark, positions)
 
 if __name__ == '__main__':
     main()
