@@ -11,32 +11,27 @@ import utils
 from kodidb import KodiDB
 class Bookmark:
     def __init__(self, itemPath = None):
-        self.kodidb = self.get_kodidb()
-        if itemPath:
-            self.itemPath = itemPath
-        else:
-            self.itemPath = self.get_file_path()
-        self.path = utils.BookmarkUtils.get_file_dir(self.itemPath)
-        self.idFile = self.get_idFile()
-        self.get_work_dir()
+        self.kodidb = self.kodidb_conn()
+        self.save_dir = None
+        self.itemPath = itemPath or utils.translateItemPath(sys.listitem.getPath())
+        self.file_dir = utils.BookmarkUtils.get_file_dir(self.itemPath)
+        self.idFile = self.idFile(self.itemPath)
 
-    def get_file_path(self):
-        itemPath = sys.listitem.getPath()
-        ret = utils.translateItemPath(itemPath)
-        return ret
-
-    def get_kodidb(self):
+    def kodidb_conn(self):
         USERDATA = xbmc.translatePath('special://userdata').decode('utf-8')
         return KodiDB( utils.Latest_DB(USERDATA, "MyVideos") )
 
-    def get_idFile(self):
-        fileName = utils.BookmarkUtils.get_file_name(self.itemPath)
-        return self.kodidb.getIdFileInDb(fileName, self.path)
+    def idFile(self, itemPath):
+        fileName = utils.BookmarkUtils.get_file_name(itemPath)
+        return self.kodidb.getIdFileInDb(fileName, self.file_dir)
 
-    def get_work_dir(self):
-        if self.path == "" or "plugin://" in self.path:
-            dialog = xbmcgui.Dialog()
-            self.path = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
+    def get_save_dir(self):
+        if not self.save_dir:
+            self.save_dir = self.file_dir
+            if self.save_dir == "" or "plugin://" in self.save_dir:
+                dialog = xbmcgui.Dialog()
+                self.save_dir = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
+        return self.save_dir
 
     def add_position(self, timeInSeconds, image = None):
         thumb = None

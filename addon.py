@@ -1,14 +1,30 @@
 import utils
-import xbmcgui
 import xbmcvfs
 from addbookmark import AddBookmark
 
-params = utils.parameters_string_to_dict(sys.argv[2])
-mode = params['mode']
+def import_gdrive_image(file_name, item_path):
+    position = utils.retrieve_position_from_thumb(file_name)
+    if position != 0:
+        file = xbmc.translatePath('special://temp') + file_name
+        addbookmark = AddBookmark(item_path)
+        addbookmark.add_thumb(file, position)
 
-position = utils.retrieve_position_from_thumb(params['image_name'])
-if position != 0:
-    file = xbmc.translatePath('special://temp') + params['image_name']
-    item_path = utils.translateItemPath(params['item_path'])
-    addbookmark = AddBookmark(item_path)
-    addbookmark.add_thumb(file, position)
+def test_import_gdrive_image():
+    params = {'item_label': 'Back.to.the.Future.1985.1080p.BluRay.x264-NODLABS.mkv', 'item_path': 'plugin%3A%2F%2Fplugin.googledrive%2F%3Fitem_id%3D18cvSs9r93ysjiyt7YG6AoNWUzaUksBUnnA%26driveid%3D10773356246826176512%26item_driveid%3D00075374721629811014%26action%3Dplay%26content_type%3Dvideo', 'mode': 'import_image', 'image_name': 'Back.to.the.Future.1985.1080p.BluRay.x264-NODLABS-thumb-120.jpg'}
+    import_gdrive_image(params['image_name'], utils.translateItemPath(params['item_path']))
+
+def main(mode):
+    if mode == 'import_image':
+        import_gdrive_image(params['image_name'], utils.translateItemPath(params['item_path']))
+
+if __name__ == '__main__':
+    if False:
+    #  if True:
+        #  test_import_gdrive_image()
+
+        from savebookmark import TestSaveBookmark
+        TestSaveBookmark.test_export_gdrive_image()
+    else:
+        params = utils.parameters_string_to_dict(sys.argv[2])
+        mode = params.get('mode', '')
+        main(mode)
