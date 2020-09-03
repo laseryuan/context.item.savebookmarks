@@ -9,6 +9,7 @@ import xbmcvfs
 
 import utils
 from kodidb import KodiDB
+
 class Bookmark:
     def __init__(self, itemPath = None):
         self.kodidb = self.kodidb_conn()

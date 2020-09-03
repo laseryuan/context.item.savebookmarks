@@ -11,11 +11,6 @@ from kodidb import KodiDB
 from bookmark import Bookmark
 import utils
 
-class TestSaveBookmark():
-    @staticmethod
-    def test_export_gdrive_image():
-        return
-
 def main():
     bookmark = Bookmark()
     bookmark.save_positions()
