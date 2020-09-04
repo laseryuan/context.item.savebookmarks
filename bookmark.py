@@ -12,18 +12,14 @@ from kodidb import KodiDB
 
 class Bookmark:
     def __init__(self, itemPath = None):
-        self.kodidb = self.kodidb_conn()
+        self.kodidb = KodiDB()
         self.save_dir = None
         self.bookmarks = None
         self.itemPath = itemPath or utils.translateItemPath(sys.listitem.getPath())
         self.file_dir = utils.BookmarkUtils.get_file_dir(self.itemPath)
-        self.idFile = self.idFile(self.itemPath)
+        self.idFile = self.__get_idFile(self.itemPath)
 
-    def kodidb_conn(self):
-        USERDATA = xbmc.translatePath('special://userdata').decode('utf-8')
-        return KodiDB( utils.Latest_DB(USERDATA, "MyVideos") )
-
-    def idFile(self, itemPath):
+    def __get_idFile(self, itemPath):
         fileName = utils.BookmarkUtils.get_file_name(itemPath)
 
         #  self.dbcur.execute('SELECT player FROM bookmark').fetchall()
@@ -32,13 +28,30 @@ class Bookmark:
             raise RuntimeError("Can't get idFile!")
         return idFiles[-1]['idFile']
 
-    def get_save_dir(self):
+    def __get_save_dir(self):
         if not self.save_dir:
             self.save_dir = self.file_dir
             if self.save_dir == "" or "plugin://" in self.save_dir:
                 dialog = xbmcgui.Dialog()
                 self.save_dir = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
         return self.save_dir
+
+    def __save_bmk_posts_to_file(self, data):
+        file = self.__get_save_dir() + '/' + utils.get_export_bookmarks_file_name(sys.listitem.getLabel())
+        f = xbmcvfs.File (file, 'w')
+        f.write(str(data))
+        f.close()
+
+    def __save_imgs_to_folder(self, image, seconds):
+        file = self.__get_save_dir() + '/' + utils.get_export_bookmarks_image_name(
+                                    sys.listitem.getLabel(), str(int(seconds))
+                                 )
+        xbmcvfs.copy(image, file)
+
+    def __get_bookmarks(self):
+        if not self.bookmarks:
+            self.bookmarks = self.kodidb.dbcur.execute('SELECT * FROM main.bookmark WHERE idFile=? AND type=0', [self.idFile]).fetchall()
+        return self.bookmarks
 
     def add_position(self, timeInSeconds, image = None):
         thumb = None
@@ -55,37 +68,20 @@ class Bookmark:
         if image:
             xbmcvfs.delete(image)
 
-    def save_bmk_posts_to_file(self, data):
-        file = self.get_save_dir() + '/' + utils.get_export_bookmarks_file_name(sys.listitem.getLabel())
-        f = xbmcvfs.File (file, 'w')
-        f.write(str(data))
-        f.close()
-
-    def save_imgs_to_folder(self, image, seconds):
-        file = self.get_save_dir() + '/' + utils.get_export_bookmarks_image_name(
-                                    sys.listitem.getLabel(), str(int(seconds))
-                                 )
-        xbmcvfs.copy(image, file)
-
-    def get_bookmarks(self):
-        if not self.bookmarks:
-            self.bookmarks = self.kodidb.dbcur.execute('SELECT * FROM main.bookmark WHERE idFile=? AND type=0', [self.idFile]).fetchall()
-        return self.bookmarks
-
     def save_thumbnails(self):
-        if self.get_save_dir() != "":
-            for bookmark in self.get_bookmarks():
+        if self.__get_save_dir() != "":
+            for bookmark in self.__get_bookmarks():
                 image = bookmark['thumbNailImage']
                 if image:
                     xbmc.log( "context.item.savebookmarks: same thumbnail: %s" % image, xbmc.LOGNOTICE )
                     seconds = bookmark['timeInSeconds']
-                    self.save_imgs_to_folder(image, seconds)
+                    self.__save_imgs_to_folder(image, seconds)
 
     def save_positions(self):
-        positions = map(lambda x: x['timeInSeconds'], self.get_bookmarks())
+        positions = map(lambda x: x['timeInSeconds'], self.__get_bookmarks())
         xbmcgui.Dialog().ok("positions", str(positions))
         xbmc.log( "context.item.savebookmarks: bookmark positions: %s" % str(positions), xbmc.LOGNOTICE )
 
-        if self.get_save_dir() != "":
-            xbmc.log( "context.item.savebookmarks: save to: %s" % self.get_save_dir().encode('utf-8'), xbmc.LOGNOTICE )
-            self.save_bmk_posts_to_file(utils.round_positions(positions))
+        if self.__get_save_dir() != "":
+            xbmc.log( "context.item.savebookmarks: save to: %s" % self.__get_save_dir().encode('utf-8'), xbmc.LOGNOTICE )
+            self.__save_bmk_posts_to_file(utils.round_positions(positions))

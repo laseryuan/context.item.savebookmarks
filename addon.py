@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
     if mode == 'test':
         from bookmark_test import TestBookmark
+        TestBookmark.test_add_position()
         TestBookmark.test_save_positions()
-        TestBookmark.test_get_bookmarks()
     else:
         main(mode)
