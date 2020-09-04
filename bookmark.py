@@ -22,8 +22,7 @@ class Bookmark:
     def __get_idFile(self, itemPath):
         fileName = utils.BookmarkUtils.get_file_name(itemPath)
 
-        #  self.dbcur.execute('SELECT player FROM bookmark').fetchall()
-        idFiles = self.kodidb.dbcur.execute('SELECT idFile FROM main.files WHERE idPath=(SELECT idPath FROM main.path WHERE strPath=?) AND strFilename=?',(self.file_dir, fileName,)).fetchall()
+        idFiles = self.kodidb.idFiles(self.file_dir, fileName)
         if len(idFiles) < 1:
             raise RuntimeError("Can't get idFile!")
         return idFiles[-1]['idFile']
@@ -50,7 +49,7 @@ class Bookmark:
 
     def __get_bookmarks(self):
         if not self.bookmarks:
-            self.bookmarks = self.kodidb.dbcur.execute('SELECT * FROM main.bookmark WHERE idFile=? AND type=0', [self.idFile]).fetchall()
+            self.bookmarks = self.kodidb.bookmarks(self.idFile)
         return self.bookmarks
 
     def add_position(self, timeInSeconds, image = None):
@@ -60,10 +59,9 @@ class Bookmark:
             xbmcvfs.copy(image, thumb)
 
         if thumb:
-            self.kodidb.dbcur.execute("INSERT INTO bookmark(idFile, timeInSeconds, type, player, thumbNailImage) Values (?, ?, 0, ?, ?)", (self.idFile, timeInSeconds, "VideoPlayer", thumb))
+            self.kodidb.insert_bookmark_with_thumb(self.idFile, timeInSeconds, thumb)
         else:
-            self.kodidb.dbcur.execute("INSERT INTO bookmark(idFile, timeInSeconds, type, player) Values (?, ?, 0, ?)", (self.idFile, timeInSeconds, "VideoPlayer"))
-        self.kodidb.dbcon.commit()
+            self.kodidb.insert_bookmark(self.idFile, timeInSeconds)
 
         if image:
             xbmcvfs.delete(image)
