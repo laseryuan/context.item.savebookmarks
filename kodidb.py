@@ -10,7 +10,7 @@ import xbmc
 class KodiDB:
     def __init__(self):
         self.dbcon = self.__kodidb_conn()
-        self.dbcon.row_factory = database.Row
+        self.dbcon.row_factory = lambda c, r: dict([(col[0], r[idx]) for idx, col in enumerate(c.description)])
         self.dbcur =  self.dbcon.cursor()
 
     def __del__(self):
