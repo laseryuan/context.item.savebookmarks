@@ -40,7 +40,6 @@ class TestBookmark():
             'plugin://plugin.googledrive/?item_id=18cvS&driveid=10773&item_driveid=000753&action=play&content_type=video'
         with patch('bookmark.sys', mock_sys):
             with patch('bookmark.KodiDB', FakeKodiDB):
-                bookmark = Bookmark(item_path)
-                with patch.object(bookmark, '_Bookmark__save_bmk_posts_to_file', return_value=None):
-                    with patch.object(bookmark, '_Bookmark__get_save_dir', return_value='/tmp'):
-                        bookmark.save_positions()
+                with patch('bookmark.Bookmark._get_save_dir', return_value='/tmp'):
+                    bookmark = Bookmark(item_path)
+                    bookmark.save_positions()

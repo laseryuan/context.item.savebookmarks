@@ -18,8 +18,7 @@ docker run -it --rm --name=kodi \
 
 cd ~/.kodi/addons/context.item.savebookmarks/
 
-pytest utils.py -s
-pytest kodidb.py::test_get_posts_from_bookmark -s
+pytest utils.py bookmark_test.py -s
 
 cat /home/kodi/.kodi/temp/kodi.log
 
