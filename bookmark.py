@@ -15,6 +15,7 @@ class Bookmark:
         self.kodidb = KodiDB()
         self.save_dir = None
         self.bookmarks = None
+        self.plot_posts = None
         self.itemPath = itemPath or utils.translateItemPath(sys.listitem.getPath())
         self.file_dir = utils.BookmarkUtils.get_file_dir(self.itemPath)
         self.idFile = self._get_idFile(self.itemPath)
@@ -53,8 +54,9 @@ class Bookmark:
         return self.bookmarks
 
     def _get_plot_posts(self):
-        plot = sys.listitem.getVideoInfoTag().getPlot()
-        return utils.retrieve_positions(plot)
+        if not self.plot_posts:
+            self.plot_posts = utils.retrieve_positions(sys.listitem.getVideoInfoTag().getPlot())
+        return self.plot_posts
 
     def import_bookmark_from_plot(self):
         positions = self._get_plot_posts()
@@ -83,7 +85,8 @@ class Bookmark:
                 if image:
                     xbmc.log( "context.item.savebookmarks: same thumbnail: %s" % image, xbmc.LOGNOTICE )
                     seconds = bookmark['timeInSeconds']
-                    self._save_imgs_to_folder(image, seconds)
+                    if seconds not in self._get_plot_posts():
+                        self._save_imgs_to_folder(image, seconds)
 
     def save_positions(self):
         positions = map(lambda x: x['timeInSeconds'], self._get_bookmarks())
