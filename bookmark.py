@@ -52,6 +52,16 @@ class Bookmark:
             self.bookmarks = self.kodidb.bookmarks(self.idFile)
         return self.bookmarks
 
+    def _get_plot_posts(self):
+        plot = sys.listitem.getVideoInfoTag().getPlot()
+        return utils.retrieve_positions(plot)
+
+    def import_bookmark_from_plot(self):
+        positions = self._get_plot_posts()
+        xbmcgui.Dialog().ok("positions", str(positions))
+        for timeInSeconds in positions:
+            self.add_position(timeInSeconds)
+
     def add_position(self, timeInSeconds, image = None):
         thumb = None
         if image:

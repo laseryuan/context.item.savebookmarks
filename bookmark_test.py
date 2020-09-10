@@ -48,3 +48,15 @@ class TestBookmark():
                 with patch('bookmark.Bookmark._get_save_dir', return_value='/tmp'):
                     bookmark = Bookmark(item_path)
                     bookmark.save_positions()
+
+    @staticmethod
+    def test_import_bookmark_from_plot():
+        mock_sys = mock.MagicMock()
+        mock_sys.listitem.getVideoInfoTag.return_value.getPlot.return_value = '[30, 10]'
+        item_path = '/path/to/video'
+
+        with patch('bookmark.sys', mock_sys):
+            with patch('bookmark.KodiDB', FakeKodiDB):
+                with patch('bookmark.Bookmark._get_save_dir', return_value='/tmp'):
+                    bookmark = Bookmark(item_path)
+                    bookmark.import_bookmark_from_plot()

@@ -45,4 +45,8 @@ class FakeKodiDB():
               'totalTimeInSeconds': None,
               'type': 0}]
 
+    def insert_bookmark(self, *args):
+        return
 
+    def insert_bookmark_with_thumb(self, *args):
+        return
