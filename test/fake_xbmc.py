@@ -77,5 +77,3 @@ mock_xbmcgui.Window = FakeWindow
 mock_xbmcvfs = mock.MagicMock()
 
 mock_xbmcplugin = mock.MagicMock()
-
-mock_sys = mock.MagicMock()
