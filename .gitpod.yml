@@ -1,0 +1,4 @@
+image: lasery/workspace-full
+
+tasks:
+  - init: pip install -r requirements.txt
