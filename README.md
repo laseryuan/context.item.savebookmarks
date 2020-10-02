@@ -1,7 +1,11 @@
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/laseryuan/context.item.savebookmarks)
+## Gitpod dev
 ```
-cd ~/projects/kodi/context.item.savebookmarks
+pytest utils.py bookmark_test.py -s
+```
 
+## UI dev
+```
 docker run -it --rm --name=kodi \
   --privileged \
   -e DISPLAY=unix:0 -v /tmp/.X11-unix:/tmp/.X11-unix \
@@ -19,10 +23,11 @@ docker run -it --rm --name=kodi \
 
 cd ~/.kodi/addons/context.item.savebookmarks/
 
-pytest utils.py bookmark_test.py -s
-
 cat /home/kodi/.kodi/temp/kodi.log
+```
 
+## Deploy
+```
 git archive --prefix context.item.savebookmarks/ --format=zip -o savebookmark.zip HEAD
 ```
 
