@@ -1,4 +1,4 @@
-image: lasery/workspace-full
+image: lasery/gitpod-workspace-full:latest
 
 tasks:
   - init: pip install -r requirements.txt

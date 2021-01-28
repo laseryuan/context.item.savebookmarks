@@ -72,3 +72,15 @@ class TestBookmark():
                 with patch('bookmark.Bookmark._get_save_dir', return_value='/tmp'):
                     bookmark = Bookmark(item_path)
                     bookmark.save_thumbnails()
+
+    @staticmethod
+    def test_save_thumbnails_none_plot():
+        mock_sys = mock.MagicMock()
+        mock_sys.listitem.getVideoInfoTag.return_value.getPlot.return_value = None
+        item_path = '/path/to/video'
+
+        with patch('bookmark.sys', mock_sys):
+            with patch('bookmark.KodiDB', FakeKodiDB):
+                with patch('bookmark.Bookmark._get_save_dir', return_value='/tmp'):
+                    bookmark = Bookmark(item_path)
+                    bookmark.save_thumbnails()

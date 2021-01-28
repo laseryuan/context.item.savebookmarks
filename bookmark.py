@@ -55,7 +55,11 @@ class Bookmark:
 
     def _get_plot_posts(self):
         if not self.plot_posts:
-            self.plot_posts = utils.retrieve_positions(sys.listitem.getVideoInfoTag().getPlot())
+            plot = sys.listitem.getVideoInfoTag().getPlot()
+            if plot:
+                self.plot_posts = utils.retrieve_positions(plot)
+            else:
+                self.plot_posts = []
         return self.plot_posts
 
     def import_bookmark_from_plot(self):
