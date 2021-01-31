@@ -2,6 +2,7 @@
 ## Gitpod dev
 ```
 pytest utils.py bookmark_test.py -s
+pytest bookmark_test.py::TestBookmark::test_save_positions -s
 ```
 
 ## UI dev

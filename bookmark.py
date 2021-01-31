@@ -8,6 +8,7 @@ import xbmcgui
 import xbmcvfs
 
 import utils
+import setting
 from kodidb import KodiDB
 
 class Bookmark:
@@ -32,8 +33,11 @@ class Bookmark:
         if not self.save_dir:
             self.save_dir = self.file_dir
             if self.save_dir == "" or "plugin://" in self.save_dir:
-                dialog = xbmcgui.Dialog()
-                self.save_dir = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
+                self.save_dir = setting.Setting.get_addon_setting("save_dir")
+                if not self.save_dir:
+                    dialog = xbmcgui.Dialog()
+                    self.save_dir = dialog.browseSingle(0, 'Select directory for save .bmk', 'video')
+                    setting.Setting.set_addon_setting("save_dir", self.save_dir)
         return self.save_dir
 
     def _save_bmk_posts_to_file(self, data):

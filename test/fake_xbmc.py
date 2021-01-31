@@ -41,6 +41,12 @@ class FakeAddon(object):
     def setSetting(self, setting_id, value):
         self._settings[setting_id] = value
 
+    def getSettingString(self, setting_id):
+        return self._settings.get(setting_id, '')
+
+    def setSettingString(self, setting_id, value):
+        self._settings[setting_id] = value
+
 class FakeCloudDriveAddon(object):
     def __init__(self, id_='test.addon'):
         self._id = id_

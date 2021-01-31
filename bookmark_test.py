@@ -1,9 +1,11 @@
 from test.fake_kodidb import FakeKodiDB
-from test.fake_xbmc import mock_xbmc, mock_xbmcgui, mock_xbmcvfs
+from test.fake_xbmc import mock_xbmc, mock_xbmcgui, mock_xbmcvfs, mock_xbmcaddon
 import sys
 sys.modules['xbmc'] = mock_xbmc
 sys.modules['xbmcgui'] = mock_xbmcgui
 sys.modules['xbmcvfs'] = mock_xbmcvfs
+sys.modules['xbmcaddon'] = mock_xbmcaddon
+
 import mock
 from mock import patch
 
@@ -37,6 +39,19 @@ class TestBookmark():
                 bookmark = Bookmark(item_path)
                 bookmark.add_position(position, thumb)
                 pmock.assert_called_once()
+
+    @staticmethod
+    def test_save_positions_without_initial_folder():
+        mock_sys = mock.MagicMock()
+        item_path = "plugin://path/to/video"
+        save_folder = '/path/to/save'
+
+        with patch('bookmark.sys', mock_sys):
+            with patch('bookmark.KodiDB', FakeKodiDB):
+                with patch('setting.Setting.get_addon_setting', return_value=None) as mock_fun:
+                    bookmark = Bookmark(item_path)
+                    bookmark.save_positions()
+                    mock_fun.assert_called_once()
 
     @staticmethod
     def test_save_positions():
